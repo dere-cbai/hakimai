@@ -1,309 +1,228 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HakimAI - Ethiopian Medical Assistant</title>
+    <title>HakimAI - BiomedParse Integration</title>
     <style>
+        /* Import Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
         @keyframes flagColors {
             0%, 100% {
-                background: linear-gradient(to bottom, #078930, #fcd116, #de071c);
+                background: linear-gradient(to bottom, #078930, #FCDD09, #DA121A);
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
             }
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f5f9;
-            color: #333;
-            line-height: 1.6;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: black;
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
-            margin: 0;
+            color: white;
+            line-height: 1.6;
+            letter-spacing: -0.02em;
         }
 
-        h1, h2 {
-            color: #078930;
-        }
-
-        h1 {
+        .header {
             text-align: center;
-            font-size: 2.5em;
-            margin-bottom: 30px;
+            margin-bottom: 50px;
+        }
+
+        .title {
+            font-size: 4em;
+            font-weight: 700;
             animation: flagColors 10s infinite;
             background-size: 100% 100%;
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-        }
-
-        .input-section, .output-section {
-            background-color: white;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .file-input {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-
-        .file-input label, .record-button {
-            background: linear-gradient(to right, #3498db, #2980b9);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-right: 10px;
-            min-width: 120px;
-            text-align: center;
-            font-size: 0.9em;
-            border: none;
-            transition: all 0.3s ease;
-        }
-
-        .file-input label:hover, .record-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .record-button {
-            background: linear-gradient(to right, #e74c3c, #c0392b);
-        }
-
-        .record-button.recording {
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        .file-input input[type="file"] {
-            display: none;
-        }
-
-        .file-name {
-            font-size: 0.9em;
-            color: #7f8c8d;
-            margin-left: 10px;
-        }
-
-        textarea, input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #bdc3c7;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            font-size: 1em;
-            transition: border-color 0.3s ease;
-        }
-
-        textarea:focus, input[type="text"]:focus {
-            outline: none;
-            border-color: #3498db;
-        }
-
-        button {
-            background: linear-gradient(to right, #2ecc71, #27ae60);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: all 0.3s ease;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        #output {
-            border: 1px solid #bdc3c7;
-            border-radius: 5px;
-            padding: 15px;
-            min-height: 100px;
-            background-color: #ecf0f1;
-        }
-
-        @media (max-width: 600px) {
-            .file-input {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .file-input label, .record-button {
-                margin-right: 0;
-                margin-bottom: 10px;
-            }
-
-            .file-name {
-                margin-left: 0;
-                margin-top: 5px;
-            }
-        }
-
-        h1 sup {
-            font-size: 0.5em;
-            vertical-align: super;
-        }
-
-        /* Dark mode styles */
-        body.dark-mode {
-            background-color: #1a1a1a;
-            color: #f0f0f0;
-        }
-
-        .dark-mode h1, .dark-mode h2 {
-            color: #f0f0f0;
-        }
-
-        .dark-mode .input-section, .dark-mode .output-section {
-            background-color: #2c2c2c;
-            box-shadow: 0 2px 10px rgba(255,255,255,0.1);
-        }
-
-        .dark-mode textarea, .dark-mode input[type="text"] {
-            background-color: #3a3a3a;
-            color: #f0f0f0;
-            border-color: #555;
-        }
-
-        .dark-mode textarea:focus, .dark-mode input[type="text"]:focus {
-            border-color: #4a90e2;
-        }
-
-        .dark-mode #output {
-            background-color: #3a3a3a;
-            border-color: #555;
-        }
-
-        .dark-mode .file-name {
-            color: #bbb;
-        }
-
-        /* Dark mode toggle button */
-        #darkModeToggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            z-index: 1000;
-        }
-
-        .dark-mode #darkModeToggle {
-            color: #f0f0f0;
+            letter-spacing: -0.04em;
+            margin-bottom: 16px;
         }
 
         .subtitle {
             text-align: center;
-            font-size: 1.2em;
-            margin-bottom: 20px;
-            color: #555;
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 400;
         }
 
-        .dark-mode .subtitle {
-            color: #bbb;
+        .external-links {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .external-link {
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            font-size: 20px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .external-link:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .tabs {
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 30px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .tab:hover {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .tab.active {
+            border-bottom: 2px solid #078930;
+            color: #078930;
+        }
+
+        .mode-dropdown {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 30px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .demo-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .upload-box, .output-box {
+            background-color: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+            color: white;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .upload-box {
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            text-align: center;
+            padding: 60px;
+        }
+
+        .upload-box:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .action-button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: white;
+            font-size: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .action-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
         }
 
         .disclaimer {
             font-style: italic;
-            font-size: 0.9em;
+            font-size: 1em;
             text-align: center;
-            margin-top: 20px;
-            color: #777;
-        }
-
-        .dark-mode .disclaimer {
-            color: #999;
-        }
-        h1 {
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
+            margin-top: 40px;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
         }
     </style>
-
 </head>
 <body>
-    <button id="darkModeToggle">🌓</button>
-    <h1 style="color: black;">ሀAኪiም <sup>AI</sup></h1>
-    <p class="subtitle">
-        <strong>The first Ethiopian Medical AI Assistant</strong>
-    </p>
-    
-    <div class="input-section">
-        <h3>Describe your medical concern or upload relevant information</h3>
-        <div class="file-input">
-            <label for="imageInput">Upload Medical Image</label>
-            <input type="file" id="imageInput" accept="image/*" onchange="updateFileName(this, 'imageFileName')">
-            <span id="imageFileName" class="file-name"></span>
+    <div class="header">
+        <h2 class="title">ሀAኪiም <sup>AI</sup></h2>
+        <!-- <p class="subtitle">The First Ethiopian Medical AI Assistant</p> -->
+        <div class="external-links">
+            <a href="#" class="external-link github">Try Demo</a>
+            <a href="#" class="external-link colab">Features</a>
+            <a href="#" class="external-link blog">Blog</a>
+            <a href="#" class="external-link youtube">Research</a>
+            <a href="#" class="external-link youtube">Team</a>
         </div>
-        <div class="file-input">
-            <label for="pdfInput">Upload Medical Report (PDF)</label>
-            <input type="file" id="pdfInput" accept=".pdf" onchange="updateFileName(this, 'pdfFileName')">
-            <span id="pdfFileName" class="file-name"></span>
-        </div>
-        <textarea id="textInput" rows="4" placeholder="Describe your symptoms or medical concern here..."></textarea>
-        <input type="text" id="promptInput" placeholder="Ask a specific medical question (optional)">
-        <button onclick="processInputs()">Get Medical Advice from HakimAI</button>
     </div>
 
-    <div class="output-section">
-        <h2>Medical Advice</h2>
-        <div id="output"></div>
+    <div class="tabs">
+        <button class="tab active">Image</button>
+        <button class="tab">Video</button>
+    </div>
+
+    <div class="mode-selector">
+        <select class="mode-dropdown">
+            <option>Medical Image Analysis + Segmentation</option>
+            <option>Disease Detection</option>
+            <option>Anatomical Recognition</option>
+        </select>
+    </div>
+
+    <div class="demo-container">
+        <div class="upload-box">
+            <div>Drop Medical Image Here</div>
+            <div>- or -</div>
+            <div>Click to Upload</div>
+            <div class="action-buttons">
+                <button class="action-button">📥</button>
+                <button class="action-button">🔄</button>
+                <button class="action-button">📋</button>
+            </div>
+        </div>
+        
+        <div class="output-box">
+            <div>Analysis Results</div>
+        </div>
     </div>
 
     <p class="disclaimer">
         Disclaimer: HakimAI is an AI assistant and does not replace professional medical advice. 
         Always consult with a qualified healthcare provider for proper diagnosis and treatment.
     </p>
-
-    <script>
-        function updateFileName(input, spanId) {
-            const fileName = input.files[0] ? input.files[0].name : 'No file chosen';
-            document.getElementById(spanId).textContent = fileName;
-        }
-    
-        function processInputs() {
-            const imageFile = document.getElementById('imageInput').files[0];
-            const pdfFile = document.getElementById('pdfInput').files[0];
-            const textInput = document.getElementById('textInput').value;
-            const prompt = document.getElementById('promptInput').value;
-    
-            let output = `HakimAI analyzed your input and provides the following advice:<br><br>`;
-            if (imageFile) output += `Analyzed medical image: ${imageFile.name}<br>`;
-            if (pdfFile) output += `Reviewed medical report: ${pdfFile.name}<br>`;
-            if (textInput) output += `Based on your description: "${textInput}"<br>`;
-            if (prompt) output += `Regarding your question: "${prompt}"<br><br>`;
-            output += "Please note that this is AI-generated advice and should not replace professional medical consultation.";
-    
-            document.getElementById('output').innerHTML = output;
-        }
-    
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-        }
-    
-        function initDarkMode() {
-            if (localStorage.getItem('darkMode') === 'true') {
-                document.body.classList.add('dark-mode');
-            }
-        }
-    
-        document.addEventListener('DOMContentLoaded', () => {
-            const darkModeToggle = document.getElementById('darkModeToggle');
-            darkModeToggle.addEventListener('click', toggleDarkMode);
-            initDarkMode();
-        });
-    </script>
+</body>
+</html>
